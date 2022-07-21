@@ -23,7 +23,7 @@ export class MessageReactionRemove extends Listener<
     idk.catch(() => null);
     if (
       (reaction.message.channel as TextChannel)
-        .permissionsFor(reaction.message.guild?.me as GuildMember)
+        .permissionsFor(reaction.message.guild?.members.me as GuildMember)
         .has('READ_MESSAGE_HISTORY')
     )
       reaction = await idk;

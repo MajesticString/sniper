@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import { Colors, Message, PermissionFlagsBits } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
 import { BaseCommand } from '../../utils/structures/BaseCommand.js';
@@ -28,10 +28,13 @@ export default class PrefixCommand extends BaseCommand {
         description: client.prefix.map((val) => `\`${val}\``).toString(),
       });
     }
-    if (args[0] && !message.member?.permissions.has('MANAGE_GUILD')) {
+    if (
+      args[0] &&
+      !message.member?.permissions.has(PermissionFlagsBits.ManageGuild)
+    ) {
       return reply(message, {
         title: 'You need the `Manage Server` permission to change the prefixes',
-        color: 'RED',
+        color: Colors.Red,
       });
     }
     if (!args[0]) {
@@ -44,7 +47,10 @@ export default class PrefixCommand extends BaseCommand {
           .toString(),
       });
     }
-    if (args[0] && message.member?.permissions.has('MANAGE_GUILD')) {
+    if (
+      args[0] &&
+      message.member?.permissions.has(PermissionFlagsBits.ManageGuild)
+    ) {
       await client.db
         .setGuildSettings(message.guildId ?? '', {
           prefixes: args,
@@ -56,7 +62,7 @@ export default class PrefixCommand extends BaseCommand {
         description: `Prefixes changed to: ${(
           await client.db.getGuildSettings(message.guildId ?? '')
         )?.prefixes?.map((val: string) => `\`${val}\``)}`,
-        color: 'GREEN',
+        color: Colors.Green,
       });
     }
   }

@@ -1,8 +1,9 @@
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import {
+  Colors,
   CommandInteraction,
+  EmbedBuilder,
   Message,
-  MessageEmbed,
   TextChannel,
 } from 'discord.js';
 import ms from 'ms';
@@ -57,7 +58,7 @@ export default class SnipeCommand extends BaseCommand {
   ): Promise<unknown> {
     let type =
       overrideType ??
-      interaction.options.getString('type', false) ??
+      interaction.options.get('type', false)?.value ??
       'messages';
     const snipe = snipes[interaction.channelId];
 
@@ -68,7 +69,7 @@ export default class SnipeCommand extends BaseCommand {
           client.uptime && client.uptime < ms('1m')
             ? 'The bot was just restarted less than a minute ago. All snipes are wiped after every restart.'
             : 'Deleted messages can only be sniped within 1 hour of deletion.',
-        color: 'RED',
+        color: Colors.Red,
       });
 
     snipes[interaction.channelId] = {
@@ -98,7 +99,7 @@ export default class SnipeCommand extends BaseCommand {
       await reply(
         interaction,
         snipe
-          ? new MessageEmbed()
+          ? new EmbedBuilder()
               .setDescription(
                 `${
                   interaction.user.bot
@@ -113,7 +114,7 @@ export default class SnipeCommand extends BaseCommand {
                 }`
               )
               .setAuthor({ name: snipe.author?.tag ?? '' })
-              .setColor('GREEN')
+              .setColor(Colors.Green)
               .setFooter({
                 text: `#${
                   (interaction.channel as TextChannel).name
@@ -124,7 +125,7 @@ export default class SnipeCommand extends BaseCommand {
               title: "There's nothing to snipe!",
               description:
                 'Deleted messages can only be sniped within 1 hour of deletion.',
-              color: 'RED',
+              color: Colors.Red,
             },
 
         // snipe?.message?.attachments.first()
@@ -143,11 +144,11 @@ export default class SnipeCommand extends BaseCommand {
         return reply(interaction, {
           title:
             "This message doesn't have any embeds! Trying this command again with the `messages` type....",
-          color: 'RED',
+          color: Colors.Red,
         }).then(() => this.chatInputRun(client, interaction, 'messages'));
       const paginator = new PaginatedMessage();
       paginator.addPageEmbeds(
-        snipe.embeds ?? [new MessageEmbed().setTitle('No embeds')]
+        snipe.embeds ?? [new EmbedBuilder().setTitle('No embeds')]
       );
       const unSnipe = await paginator.run(interaction);
       unSnipes[interaction.channelId] = {
@@ -158,7 +159,7 @@ export default class SnipeCommand extends BaseCommand {
         return reply(interaction, {
           title:
             "This message doesn't have any attachments. Trying this command again with the `embeds` type....",
-          color: 'RED',
+          color: Colors.Red,
         }).then(() => this.chatInputRun(client, interaction, 'embeds'));
       const paginator = new PaginatedMessage();
       paginator.addPages(snipe.attachments.map((a) => ({ content: a })));
@@ -188,7 +189,7 @@ export default class SnipeCommand extends BaseCommand {
           client.uptime && client.uptime < ms('1m')
             ? 'The bot was just restarted less than a minute ago. All snipes are wiped after every restart.'
             : 'Deleted messages can only be sniped within 1 hour of deletion.',
-        color: 'RED',
+        color: Colors.Red,
       });
 
     snipes[message.channelId] = {
@@ -224,7 +225,7 @@ export default class SnipeCommand extends BaseCommand {
       await reply(
         message,
         snipe
-          ? new MessageEmbed()
+          ? new EmbedBuilder()
               .setDescription(
                 `${
                   message.author.bot
@@ -239,7 +240,7 @@ export default class SnipeCommand extends BaseCommand {
                 }`
               )
               .setAuthor({ name: snipe.author?.tag ?? '' })
-              .setColor('GREEN')
+              .setColor(Colors.Green)
               .setFooter({
                 text: `#${
                   (message.channel as TextChannel).name
@@ -250,7 +251,7 @@ export default class SnipeCommand extends BaseCommand {
               title: "There's nothing to snipe!",
               description:
                 'Deleted messages can only be sniped within 1 hour of deletion.',
-              color: 'RED',
+              color: Colors.Red,
             },
 
         // snipe?.message?.attachments.first()
@@ -269,11 +270,11 @@ export default class SnipeCommand extends BaseCommand {
         return reply(message, {
           title:
             "This message doesn't have any embeds! Trying this command again with the `messages` type....",
-          color: 'RED',
+          color: Colors.Red,
         }).then(() => this.run(client, message, ['messages']));
       const paginator = new PaginatedMessage();
       paginator.addPageEmbeds(
-        snipe.embeds ?? [new MessageEmbed().setTitle('No embeds')]
+        snipe.embeds ?? [new EmbedBuilder().setTitle('No embeds')]
       );
       const unSnipe = await paginator.run(message);
       unSnipes[message.channelId] = {
@@ -284,7 +285,7 @@ export default class SnipeCommand extends BaseCommand {
         return reply(message, {
           title:
             "This message doesn't have any attachments. Trying this command again with the `embeds` type....",
-          color: 'RED',
+          color: Colors.Red,
         }).then(() => this.run(client, message, ['embeds']));
       const paginator = new PaginatedMessage();
       paginator.addPages(snipe.attachments.map((a) => ({ content: a })));

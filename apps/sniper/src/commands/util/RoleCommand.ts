@@ -21,11 +21,11 @@ export default class RoleCommand extends BaseCommand {
     reply(message, {
       title: `${role.name}`,
       description: `${role.toString()}`,
-      color: role.hexColor,
+      color: role.color,
       fields: [
         {
           name: 'Emoji',
-          value: `Role emoji: ${role.iconURL({ format: 'webp' }) || 'none'}`,
+          value: `Role emoji: ${role.iconURL({ extension: 'webp' }) || 'none'}`,
           inline: true,
         },
         {

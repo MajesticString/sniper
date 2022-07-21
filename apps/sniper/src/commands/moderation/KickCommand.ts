@@ -1,4 +1,10 @@
-import type { GuildMember, Message, TextChannel } from 'discord.js';
+import {
+  Colors,
+  GuildMember,
+  Message,
+  PermissionFlagsBits,
+  TextChannel,
+} from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
 import { BaseCommand } from '../../utils/structures/BaseCommand.js';
@@ -6,30 +12,32 @@ import { BaseCommand } from '../../utils/structures/BaseCommand.js';
 export default class KickCommand extends BaseCommand {
   constructor() {
     super('kick', 'moderation', [], 100, 'Kicks a user/users', {
-      permissions: ['KICK_MEMBERS'],
+      permissions: ['KickMembers'],
       argsDescription: '<user (user mention or username or id)> ....',
     });
   }
 
   async run(client: DiscordClient, message: Message, args: Array<string>) {
     const users: GuildMember[] = [];
-    if (!message.member?.permissions.has('KICK_MEMBERS')) {
+    if (!message.member?.permissions.has(PermissionFlagsBits.KickMembers)) {
       reply(message, {
         title: 'really?',
         description: 'You do not have the `KICK_MEMBERS` permission.',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
     if (
-      !message.guild?.me?.permissions.has('KICK_MEMBERS') ||
+      !message.guild?.members.me?.permissions.has(
+        PermissionFlagsBits.KickMembers
+      ) ||
       !(message.channel as TextChannel)
-        .permissionsFor(message.guild.me)
-        .has('KICK_MEMBERS')
+        .permissionsFor(message.guild.members.me)
+        .has(PermissionFlagsBits.KickMembers)
     ) {
       reply(message, {
         title: 'I do not have the `KICK_MEMBERS` permission.',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }

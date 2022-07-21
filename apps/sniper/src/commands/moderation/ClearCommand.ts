@@ -1,4 +1,4 @@
-import type { Message, TextChannel } from 'discord.js';
+import { Colors, Message, PermissionFlagsBits, TextChannel } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
 import { BaseCommand } from '../../utils/structures/BaseCommand.js';
@@ -13,26 +13,34 @@ export default class ClearCommand extends BaseCommand {
       'Clears messages from a channel',
       {
         argsDescription: '<# of messages to clear>',
+        permissions: ['ManageMessages'],
       }
     );
   }
 
   async run(client: DiscordClient, message: Message, args: Array<string>) {
     if (
-      !message.member?.permissions.has('MANAGE_MESSAGES') &&
+      !message.member?.permissions.has(PermissionFlagsBits.ManageMessages) &&
       message.author.id !== '696554549418262548'
     ) {
       reply(message, { title: 'you dont have the required perms' });
       return;
     }
-    if (!message.guild?.me?.permissions.has('MANAGE_MESSAGES')) {
-      reply(message, { title: 'I dont have the required perms', color: 'RED' });
+    if (
+      !message.guild?.members.me?.permissions.has(
+        PermissionFlagsBits.ManageMessages
+      )
+    ) {
+      reply(message, {
+        title: 'I dont have the required perms',
+        color: Colors.Red,
+      });
       return;
     }
     if (!args[0]) {
       reply(message, {
         title: 'please specify the number of messages to clear.',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
@@ -40,7 +48,7 @@ export default class ClearCommand extends BaseCommand {
       reply(message, {
         title:
           'the amount of messages you want me to clear must be a valid number below 100',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
@@ -49,14 +57,14 @@ export default class ClearCommand extends BaseCommand {
         title: "I can't clear that many messages",
         description:
           "The discord api doesn't let me. Number of messages must be below 100.",
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
     if (parseInt(args[0]) < 1) {
       reply(message, {
         title: 'I have to delete at least 1 message',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
@@ -69,7 +77,7 @@ export default class ClearCommand extends BaseCommand {
             title: `Deleted ${args[0]} + 1 message.`,
             description:
               'Why +1? because you sent a command. that needs to be deleted.',
-            color: 'GREEN',
+            color: Colors.Green,
           },
         ],
       })

@@ -1,4 +1,4 @@
-import { Message, Util } from 'discord.js';
+import { cleanContent, Message } from 'discord.js';
 import ms from 'ms';
 import type { DiscordClient } from '../../client/client.js';
 import { snipes } from '../../commands/util/snipes.js';
@@ -20,7 +20,7 @@ export default class MessageDeleteEvent extends BaseEvent {
       log(
         `${message.guild?.name}: ${
           message.member?.user.username
-        }: ${Util.cleanContent(message.content, message.channel)}`
+        }: ${cleanContent(message.content, message.channel)}`
       );
 
     snipes[message.channelId] = {

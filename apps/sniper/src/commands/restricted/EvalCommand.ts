@@ -1,4 +1,4 @@
-import type { CommandInteraction, Message } from 'discord.js';
+import { Colors, CommandInteraction, Message } from 'discord.js';
 import { inspect } from 'node:util';
 import type { DiscordClient } from '../../client/client.js';
 import { goodServers } from '../../sniper.js';
@@ -39,7 +39,10 @@ export default class EvalCommand extends BaseCommand {
       goodServers
     );
   }
-  async chatInputRun(client: DiscordClient, interaction: CommandInteraction) {
+  async chatInputRun(
+    client: DiscordClient,
+    interaction: BaseCommand.ChatInputCommandInteraction
+  ) {
     if (interaction.user.id === '696554549418262548') {
       const { result, success } = await this.eval(
         client,
@@ -68,13 +71,13 @@ export default class EvalCommand extends BaseCommand {
       //     eval(args.join(' '));
       //   };
       //   evalScript().catch(console.error);
-      //   reply(interaction, { title: 'success', color: 'GREEN' }).then((msg) =>
+      //   reply(interaction, { title: 'success', color: Colors.Green }).then((msg) =>
       //     setTimeout(() => msg.delete(), 3000)
       //   );
       // } catch (err) {
       //   reply(interaction, {
       //     title: 'you messed up your code:\n' + err,
-      //     color: 'RED',
+      //     color: Colors.Red,
       //   });
       // }
     } else {
@@ -82,7 +85,7 @@ export default class EvalCommand extends BaseCommand {
         title: "You can't use this command.",
         description:
           'This command is so dangerous (it could literally wipe all files of the server this bot is running on) that only the creator of the bot can use it.',
-        color: 'RED',
+        color: Colors.Red,
       });
     }
   }
@@ -115,13 +118,13 @@ export default class EvalCommand extends BaseCommand {
       //     eval(args.join(' '));
       //   };
       //   evalScript().catch(console.error);
-      //   reply(message, { title: 'success', color: 'GREEN' }).then((msg) =>
+      //   reply(message, { title: 'success', color: Colors.Green }).then((msg) =>
       //     setTimeout(() => msg.delete(), 3000)
       //   );
       // } catch (err) {
       //   reply(message, {
       //     title: 'you messed up your code:\n' + err,
-      //     color: 'RED',
+      //     color: Colors.Red,
       //   });
       // }
     } else {
@@ -129,7 +132,7 @@ export default class EvalCommand extends BaseCommand {
         title: "You can't use this command.",
         description:
           'This command is so dangerous (it could literally wipe all files of the server this bot is running on) that only the creator of the bot can use it.',
-        color: 'RED',
+        color: Colors.Red,
       });
     }
   }

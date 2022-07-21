@@ -1,5 +1,11 @@
 import { red } from 'colorette';
-import { Collection, type Message, type MessageEmbedOptions } from 'discord.js';
+import {
+  APIEmbed,
+  Collection,
+  Colors,
+  PermissionFlagsBits,
+  type Message,
+} from 'discord.js';
 import ms from 'ms';
 import type { DiscordClient } from '../../client/client.js';
 import { harrysDiscordID } from '../../sniper.js';
@@ -20,7 +26,7 @@ export default class MessageCreateEvent extends BaseEvent {
   }
 
   async run(client: DiscordClient, message: Message) {
-    if (message.channel.type === 'DM') return;
+    if (message.channel.isDMBased()) return;
 
     if (
       (message.author.id !== '922939398239174699' && message.author.bot) ||
@@ -71,8 +77,12 @@ export default class MessageCreateEvent extends BaseEvent {
         : client.prefix;
     for (const prefix of prefixes) {
       if (message.content.startsWith(prefix.toLowerCase())) {
-        if (!message.guild.me?.permissions.has('SEND_MESSAGES')) {
-          message.author.send('I cant send messages in that server lol');
+        if (
+          !message.guild.members.me?.permissions.has(
+            PermissionFlagsBits.SendMessages
+          )
+        ) {
+          message.author.send('I cant send messages in that server.');
         }
         const [cmdName, ...cmdArgs] = message.content
           .slice(prefix.length)
@@ -88,11 +98,11 @@ export default class MessageCreateEvent extends BaseEvent {
           command.category === 'test' &&
           message.author.id !== harrysDiscordID
         ) {
-          const embed: MessageEmbedOptions = {
+          const embed: APIEmbed = {
             title: 'This command is in the category of `test`',
             description:
               'Test commands are in development and are generally unstable and prone to errors. They are disabled because are sometimes capable of mentioning everyone and changing peoples permissions',
-            color: 'RED',
+            color: Colors.Red,
           };
           return reply(message, embed);
         }
@@ -104,7 +114,7 @@ export default class MessageCreateEvent extends BaseEvent {
         ) {
           reply(message, {
             title: 'This command is disabled.',
-            color: 'RED',
+            color: Colors.Red,
           });
           return;
         }
@@ -120,7 +130,7 @@ export default class MessageCreateEvent extends BaseEvent {
         if (!timeStamps)
           return reply(message, {
             title: 'An error occured. Try again in a few seconds.',
-            color: 'RED',
+            color: Colors.Red,
           });
 
         if (
@@ -142,7 +152,7 @@ export default class MessageCreateEvent extends BaseEvent {
               description: `Wait ${ms(timeLeft, {
                 long: true,
               })} before using this command`,
-              color: 'RED',
+              color: Colors.Red,
             });
           }
         }
@@ -155,7 +165,7 @@ export default class MessageCreateEvent extends BaseEvent {
           ) {
             reply(message, {
               title: 'This command is restricted.',
-              color: 'RED',
+              color: Colors.Red,
             });
             return;
           }
@@ -166,7 +176,7 @@ export default class MessageCreateEvent extends BaseEvent {
             if (!message.member?.permissions.has(permission)) {
               reply(message, {
                 title: `You do not have the permission to use this command.`,
-                color: 'RED',
+                color: Colors.Red,
               });
               return;
             }
@@ -185,19 +195,21 @@ export default class MessageCreateEvent extends BaseEvent {
                 { merge: true }
               );
 
-            log('Begin command ' + command?.name + ' in ' + message.guild.name);
+            log(
+              `${message.author.tag} used ${command?.name} in ${message.guild.name}`
+            );
             if (!cmdArgs[0] && command.argsRequired) {
               reply(message, {
                 title: 'This command requires arguments.',
                 description: `${command.argsDescription}`,
-                color: 'RED',
+                color: Colors.Red,
               });
               return;
             }
             if (
               message.channel
                 .permissionsFor(client.user ?? '')
-                ?.has('SEND_MESSAGES')
+                ?.has(PermissionFlagsBits.SendMessages)
             ) {
               command.run(client, message, cmdArgs);
               client.db.db

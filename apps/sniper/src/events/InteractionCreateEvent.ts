@@ -1,6 +1,8 @@
 import {
-  MessageActionRow,
-  MessageButton,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  MessageActionRowComponentBuilder,
   type GuildMemberRoleManager,
   type Interaction,
   type TextChannel,
@@ -14,14 +16,14 @@ export default class InteractionCreateEvent extends BaseEvent {
   }
 
   async run(client: DiscordClient, interaction: Interaction) {
-    if (interaction.isCommand()) {
+    if (interaction.isChatInputCommand()) {
       console.log('slash command ' + interaction.commandName);
       client.commands.get(interaction.commandName)?.chatInputRun &&
         // @ts-ignore
         client.commands
           .get(interaction.commandName)
           ?.chatInputRun(client, interaction);
-    } else if (interaction.isMessageContextMenu()) {
+    } else if (interaction.isContextMenuCommand()) {
       client.commands.get(interaction.commandName)?.contextMenuRun &&
         // @ts-ignore
         client.commands
@@ -72,10 +74,10 @@ export default class InteractionCreateEvent extends BaseEvent {
               },
             ],
             components: [
-              new MessageActionRow().addComponents(
-                new MessageButton()
+              new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+                new ButtonBuilder()
                   .setCustomId('pingRole')
-                  .setStyle('PRIMARY')
+                  .setStyle(ButtonStyle.Primary)
                   .setLabel('Add/remove role')
               ),
             ],

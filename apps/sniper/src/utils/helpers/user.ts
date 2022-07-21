@@ -1,4 +1,4 @@
-import type { GuildMember, User } from 'discord.js';
+import { GuildMember, PermissionFlagsBits, User } from 'discord.js';
 import { FieldValue } from 'firebase-admin/firestore';
 import type { DiscordClient } from '../../client/client.js';
 import { db } from '../../sniper.js';
@@ -29,12 +29,12 @@ export const isAdmin = (
     return client.guilds.cache
       .get(guildID)
       ?.members.cache.get(userID)
-      ?.permissions.has('MANAGE_GUILD');
+      ?.permissions.has(PermissionFlagsBits.ManageGuild);
   } else {
     return client.guilds.cache
       .get(guildID)
       ?.members.cache.get(userID.id)
-      ?.permissions.has('MANAGE_GUILD');
+      ?.permissions.has(PermissionFlagsBits.ManageGuild);
   }
 };
 

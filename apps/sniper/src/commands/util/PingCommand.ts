@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import { Colors, Message } from 'discord.js';
 import ms from 'ms';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
@@ -17,7 +17,7 @@ export default class PingCommand extends BaseCommand {
   }
 
   async run(client: DiscordClient, message: Message) {
-    reply(message, { title: 'pinging....', color: 'RED' }).then((msg) => {
+    reply(message, { title: 'pinging....', color: Colors.Red }).then((msg) => {
       const messageSendTime = Date.now();
       let dbPing: number;
       getUserData(message.author.id).then(() => {
@@ -27,7 +27,7 @@ export default class PingCommand extends BaseCommand {
             {
               title: 'Pong!',
               description: 'these numbers do *not* represent lag.',
-              color: 'GREEN',
+              color: Colors.Green,
               fields: [
                 {
                   name: 'Latency',

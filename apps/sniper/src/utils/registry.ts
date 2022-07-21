@@ -57,6 +57,15 @@ export function registerCommands(client: DiscordClient, dir = '') {
             client,
             applicationCommandsRegistry
           );
+        } else if (
+          command.chatInputRun &&
+          !command.registerApplicationCommands &&
+          command.registerChatInput
+        ) {
+          console.log('registering command: ' + command.name);
+          applicationCommandsRegistry.registerChatInputCommand((b) =>
+            b.setName(command.name).setDescription(command.description)
+          );
         }
 
         if (helpCommandHelperCollection.has(command.category)) {

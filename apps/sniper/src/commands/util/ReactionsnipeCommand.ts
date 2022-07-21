@@ -1,4 +1,10 @@
-import { GuildEmoji, Message, MessageEmbed, TextChannel } from 'discord.js';
+import {
+  Colors,
+  EmbedBuilder,
+  GuildEmoji,
+  Message,
+  TextChannel,
+} from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
 import { BaseCommand } from '../../utils/structures/BaseCommand.js';
@@ -33,14 +39,14 @@ export default class ReactionsnipeCommand extends BaseCommand {
     await reply(
       message,
       channelSnipe
-        ? new MessageEmbed()
+        ? new EmbedBuilder()
             .setDescription(
               `reacted with ${formatEmoji(
                 channelSnipe.emoji
               )} on [this message](${channelSnipe.messageURL})`
             )
             .setAuthor({ name: channelSnipe.user?.tag ?? '' })
-            .setColor('GREEN')
+            .setColor(Colors.Green)
             .setFooter({
               text: `#${(message.channel as TextChannel).name}`,
             })

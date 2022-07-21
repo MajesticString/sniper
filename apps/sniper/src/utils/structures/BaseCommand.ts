@@ -10,9 +10,9 @@ import type {
   Awaitable,
   CommandInteraction,
   CommandInteractionOptionResolver,
-  ContextMenuInteraction,
+  ContextMenuCommandInteraction,
   Message,
-  PermissionString,
+  PermissionsString,
 } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { commands } from '../commands.js';
@@ -21,13 +21,14 @@ interface ExtraCommandOptions {
   cooldownMessage?: string;
   argsDescription?: string;
   argsRequired?: boolean;
-  permissions?: PermissionString[];
+  permissions?: PermissionsString[];
   disabled?: boolean;
   slashCommandType?: ApplicationCommandType;
   /**
    * The tip shown in the docs
    */
   tip?: string;
+  registerChatInput?: boolean;
 }
 
 export abstract class BaseCommand {
@@ -48,8 +49,9 @@ export abstract class BaseCommand {
       cooldownMessage: "You can't use this command yet",
       argsDescription: undefined,
       argsRequired: false,
-      permissions: ['SEND_MESSAGES', 'READ_MESSAGE_HISTORY', 'VIEW_CHANNEL'],
+      permissions: ['SendMessages', 'ReadMessageHistory', 'ViewChannel'],
       disabled: false,
+      registerChatInput: false,
     }
   ) {}
 
@@ -77,12 +79,12 @@ export abstract class BaseCommand {
   get argsDescription(): string | undefined {
     return this.extraCommandOptions?.argsDescription ?? undefined;
   }
-  get permissionsRequired(): PermissionString[] {
+  get permissionsRequired(): PermissionsString[] {
     return (
       this.extraCommandOptions?.permissions || [
-        'SEND_MESSAGES',
-        'READ_MESSAGE_HISTORY',
-        'VIEW_CHANNEL',
+        'SendMessages',
+        'ReadMessageHistory',
+        'ViewChannel',
       ]
     );
   }
@@ -97,6 +99,9 @@ export abstract class BaseCommand {
   }
   get tip(): string {
     return this.extraCommandOptions?.tip ?? '';
+  }
+  get registerChatInput(): boolean {
+    return this.extraCommandOptions.registerChatInput ?? false;
   }
 
   isAlias = false;
@@ -116,7 +121,7 @@ export abstract class BaseCommand {
 
   contextMenuRun?(
     client: DiscordClient,
-    interaction: ContextMenuInteraction
+    interaction: ContextMenuCommandInteraction
   ): Awaitable<unknown>;
 
   /**
@@ -132,14 +137,16 @@ export abstract class BaseCommand {
    */
   chatInputRun?(
     client: DiscordClient,
-    interaction: CommandInteraction
+    interaction: BaseCommand.ChatInputCommandInteraction
   ): Awaitable<unknown>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace BaseCommand {
-  export type CommandInteraction = import('discord.js').CommandInteraction;
+  export type ChatInputCommandInteraction =
+    import('discord.js').ChatInputCommandInteraction;
   export type CommandsRegistry = ApplicationCommandsRegistry;
+  export type Client = DiscordClient;
 }
 export default BaseCommand;
 

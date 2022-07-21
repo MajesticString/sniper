@@ -62,7 +62,7 @@ export class SnipeCommand extends Command {
             title: "There's nothing to snipe!",
             description:
               'Deleted messages can only be sniped within 1 hour of deletion.',
-            color: 'RED',
+            color: Colors.Red,
           },
         ],
       });
@@ -125,7 +125,7 @@ export class SnipeCommand extends Command {
                   title: "There's nothing to snipe!",
                   description:
                     'Deleted messages can only be sniped within 1 hour of deletion.',
-                  color: 'RED',
+                  color: Colors.Red,
                 },
           ],
         })
@@ -141,7 +141,7 @@ export class SnipeCommand extends Command {
             {
               title:
                 "This message doesn't have any embeds! Try this command again with the `messages` type.",
-              color: 'RED',
+              color: Colors.Red,
             },
           ],
         });
@@ -160,7 +160,7 @@ export class SnipeCommand extends Command {
             {
               title:
                 "This message doesn't have any attachments. Try this command again with the `embeds` type.",
-              color: 'RED',
+              color: Colors.Red,
             },
           ],
         });

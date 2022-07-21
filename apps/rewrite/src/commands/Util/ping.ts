@@ -13,7 +13,7 @@ export class PingCommand extends Command {
   public chatInputRun(message: CommandInteraction) {
     message
       .reply({
-        embeds: [{ title: 'pinging....', color: 'RED' }],
+        embeds: [{ title: 'pinging....', color: Colors.Red }],
         fetchReply: true,
       })
       .then((msg) => {
@@ -26,7 +26,7 @@ export class PingCommand extends Command {
             {
               title: 'Pong!',
               description: 'these numbers do *not* represent lag.',
-              color: 'GREEN',
+              color: Colors.Green,
               fields: [
                 {
                   name: 'Latency',

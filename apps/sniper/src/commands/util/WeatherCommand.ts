@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import { Colors, Message } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import type {
   BingMapsAddressRes,
@@ -21,7 +21,10 @@ export default class WeatherCommand extends BaseCommand {
   async run(client: DiscordClient, message: Message, args: Array<string>) {
     Math.max(...client.guilds.cache.map((o) => o.memberCount));
     if (!args[0]) {
-      reply(message, { title: 'You need to specify a city.', color: 'RED' });
+      reply(message, {
+        title: 'You need to specify a city.',
+        color: Colors.Red,
+      });
       return;
     }
     if (args[1] && args[1] !== 'hourly' && args[1] !== 'daily') {
@@ -40,7 +43,7 @@ export default class WeatherCommand extends BaseCommand {
           title: "That city wasn't found",
           description:
             'Try again maybe with a larger city nearby or an alternate spelling.',
-          color: 'RED',
+          color: Colors.Red,
         });
         return;
       }
@@ -51,7 +54,7 @@ export default class WeatherCommand extends BaseCommand {
         reply(message, {
           title: 'Only US cities are supported at the moment',
           description: 'sorry',
-          color: 'RED',
+          color: Colors.Red,
         });
         return;
       }
@@ -64,7 +67,7 @@ export default class WeatherCommand extends BaseCommand {
         reply(message, {
           title: 'Only US cities are supported at the moment',
           description: 'sorry',
-          color: 'RED',
+          color: Colors.Red,
         });
         return;
       }
@@ -108,7 +111,7 @@ export default class WeatherCommand extends BaseCommand {
     } catch (error) {
       reply(message, {
         title: 'US Cities are only supported at the moment.',
-        color: 'RED',
+        color: Colors.Red,
       });
     }
   }

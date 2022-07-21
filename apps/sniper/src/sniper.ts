@@ -1,5 +1,5 @@
 import { createColors } from 'colorette';
-import { Intents } from 'discord.js';
+import { GatewayIntentBits } from 'discord.js';
 import admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -41,15 +41,11 @@ createColors();
 
 export const client = new DiscordClient({
   intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.DIRECT_MESSAGES,
-    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_MESSAGE_TYPING,
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessageReactions,
   ],
-  partials: ['CHANNEL'],
   shards: 'auto',
 });
 

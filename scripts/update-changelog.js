@@ -8,10 +8,8 @@ function sleep(delay) {
   var start = new Date().getTime();
   while (new Date().getTime() < start + delay);
 }
-
 const main = async () => {
   let stuffToAppend = '';
-
   await fetch(
     'https://api.github.com/repos/MajesticString/sniper/commits?per_page=50'
   ).then(async (res) => {

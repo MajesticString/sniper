@@ -1,4 +1,4 @@
-import type { CommandInteraction, Message, TextChannel } from 'discord.js';
+import { Colors, Message, PermissionFlagsBits, TextChannel } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { slappeyJSON } from '../../sniper.js';
 import { reply } from '../../utils/helpers/message.js';
@@ -19,7 +19,28 @@ export default class ActCommand extends BaseCommand {
     );
   }
 
-  async chatInputRun(client: DiscordClient, interaction: CommandInteraction) {
+  async registerApplicationCommands(
+    c: never,
+    reg: BaseCommand.CommandsRegistry
+  ) {
+    reg.registerChatInputCommand(
+      (b) =>
+        b
+          .setName(this.name)
+          .setDescription(
+            'Sends a command as someone else. Restricted to certain servers.'
+          )
+          .addUserOption((i) =>
+            i.setName('user').setDescription('The user to impersonate')
+          ),
+      slappeyJSON.actServers
+    );
+  }
+
+  async chatInputRun(
+    client: DiscordClient,
+    interaction: BaseCommand.ChatInputCommandInteraction
+  ) {
     if (
       !(slappeyJSON.actServers as string[]).includes(interaction.guildId ?? '')
     )
@@ -30,27 +51,24 @@ export default class ActCommand extends BaseCommand {
       });
 
     if (
-      !interaction.guild?.me
+      !interaction.guild?.members.me
         ?.permissionsIn(interaction.channel as TextChannel)
-        .has('MANAGE_WEBHOOKS')
+        .has(PermissionFlagsBits.ManageWebhooks)
     )
       return reply(interaction, {
         title: 'I do not have the `Manage Webhooks` permission',
         description:
           'I need the `Manage Webhooks` permission to use this command',
-        color: 'RED',
+        color: Colors.Red,
       });
-    const wh = await (interaction.channel as TextChannel)?.createWebhook(
-      interaction.guild.members.cache.get(
-        interaction.options.getUser('user', true).id
-      )?.nickname ?? interaction.options.getUser('user', true).username,
-      {
-        avatar: interaction.options
-          .getUser('user', true)
-          .displayAvatarURL({ dynamic: false }),
-        reason: 'sniper command',
-      }
-    );
+    const wh = await (interaction.channel as TextChannel)?.createWebhook({
+      name:
+        interaction.guild.members.cache.get(
+          interaction.options.getUser('user', true).id
+        )?.nickname ?? interaction.options.getUser('user', true).username,
+      avatar: interaction.options.getUser('user', true).displayAvatarURL(),
+      reason: 'sniper command',
+    });
     await wh.send({
       content: interaction.options.getString('message', true),
       allowedMentions: { parse: [] },
@@ -70,29 +88,30 @@ export default class ActCommand extends BaseCommand {
       });
 
     if (
-      !message.guild?.me
+      !message.guild?.members.me
         ?.permissionsIn(message.channel as TextChannel)
-        .has('MANAGE_WEBHOOKS')
+        .has(PermissionFlagsBits.ManageWebhooks)
     )
       return reply(message, {
         title: 'I do not have the `Manage Webhooks` permission',
         description:
           'I need the `Manage Webhooks` permission to use this command',
-        color: 'RED',
+        color: Colors.Red,
       });
     const user = message.mentions.users.first();
     if (!user)
-      return reply(message, { title: 'You must mention a user', color: 'RED' });
-    if (!message.channel.isText())
+      return reply(message, {
+        title: 'You must mention a user',
+        color: Colors.Red,
+      });
+    if (!message.channel.isTextBased())
       return reply(message, 'This command can only be used in text channels');
-    const wh = await (message.channel as TextChannel).createWebhook(
+    const wh = await (message.channel as TextChannel).createWebhook({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      message.mentions.members?.first()?.nickname ?? user!.username,
-      {
-        avatar: user?.displayAvatarURL({ dynamic: false }),
-        reason: 'sniper command',
-      }
-    );
+      name: message.mentions.members?.first()?.nickname ?? user!.username,
+      avatar: user?.displayAvatarURL(),
+      reason: 'sniper command',
+    });
     message.delete().catch(() => null);
     await wh.send({
       content: args.slice(1).join(' ') ?? '(no content provided)',

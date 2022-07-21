@@ -1,5 +1,5 @@
 import { redBright } from 'colorette';
-import type { Guild } from 'discord.js';
+import { ActivityType, Guild } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { harrysDiscordID } from '../../sniper.js';
 import { log } from '../../utils/helpers/console.js';
@@ -13,7 +13,7 @@ export default class GuildDeleteEvent extends BaseEvent {
   async run(client: DiscordClient, guild: Guild) {
     client.user?.setActivity({
       name: `$help in ${client.guilds.cache.size} servers`,
-      type: 'WATCHING',
+      type: ActivityType.Watching,
     });
     log(
       redBright(
@@ -37,9 +37,10 @@ export default class GuildDeleteEvent extends BaseEvent {
           ].join('\n'),
           image: {
             url:
-              guild.iconURL({ dynamic: true, size: 1024 }) ??
-              owner?.user.avatarURL({ dynamic: true, size: 1024 }) ??
-              owner?.user.defaultAvatarURL,
+              guild.iconURL({ size: 1024 }) ??
+              owner?.user.avatarURL({ size: 1024 }) ??
+              owner?.user.defaultAvatarURL ??
+              'https://wompampsupport.azureedge.net/fetchimage?siteId=7575&v=2&jpgQuality=100&width=700&url=https%3A%2F%2Fi.kym-cdn.com%2Fentries%2Ficons%2Fmobile%2F000%2F039%2F022%2Fddddd.jpg',
           },
         },
       ],

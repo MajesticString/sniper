@@ -24,7 +24,7 @@ export class GuildCreate extends Listener<typeof Events.GuildCreate> {
             `**Guild Name:** ${guild.name}`,
             `**Guild ID:** ${guild.id}`,
             `**Guild Owner:** ${owner.user.tag} `,
-            `**Guild Member Count:** ${guild.memberCount.toLocaleString()}`,
+            `**Guild Member Count:** ${guild.members.memberCount.toLocaleString()}`,
           ].join('\n'),
           image: {
             url:
@@ -42,10 +42,12 @@ export class GuildCreate extends Listener<typeof Events.GuildCreate> {
     );
     if (
       guild.systemChannel &&
-      guild.me?.permissions.has('SEND_MESSAGES') &&
-      guild.me?.permissions.has('VIEW_CHANNEL') &&
-      guild.systemChannel?.permissionsFor(guild.me).has('SEND_MESSAGES') &&
-      guild.systemChannel?.permissionsFor(guild.me).has('VIEW_CHANNEL')
+      guild.members.me?.permissions.has('SEND_MESSAGES') &&
+      guild.members.me?.permissions.has('VIEW_CHANNEL') &&
+      guild.systemChannel
+        ?.permissionsFor(guild.members.me)
+        .has('SEND_MESSAGES') &&
+      guild.systemChannel?.permissionsFor(guild.members.me).has('VIEW_CHANNEL')
     ) {
       const msg = await guild.systemChannel?.send({
         embeds: [

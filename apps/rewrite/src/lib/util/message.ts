@@ -27,7 +27,7 @@ export const reply = async (
     if (
       !(message.channel as TextChannel)
         // eslint-disable-next-line
-        .permissionsFor(message.guild!.me!)
+        .permissionsFor(message.guild!.members.me!)
         .has('ATTACH_FILES')
     ) {
       message.reply('I do not have permission to send files.');
@@ -42,11 +42,11 @@ export const reply = async (
   if (
     (message.channel as TextChannel)
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/no-non-null-assertion -- You kind of have to do this
-      .permissionsFor(message.guild?.me!)
+      .permissionsFor(message.guild!.members.me!)
       .has('SEND_MESSAGES') &&
     (message.channel as TextChannel)
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/no-non-null-assertion
-      .permissionsFor(message.guild?.me!)
+      .permissionsFor(message.guild!.members.me!)
       .has('EMBED_LINKS')
   )
     return getUserData(message?.author?.id || message.member?.id || '').then(
@@ -134,7 +134,7 @@ export async function send(
     if (
       (messageOrChannel.channel as TextChannel)
         // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/no-non-null-assertion -- You kind of have to do this
-        .permissionsFor(messageOrChannel.guild?.me!)
+        .permissionsFor(messageOrChannel.guild!.members.me!)
         .has('SEND_MESSAGES')
     )
       return messageOrChannel.channel.send({
@@ -158,7 +158,7 @@ export async function send(
     if (
       messageOrChannel
         // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/no-non-null-assertion -- You kind of have to do this
-        .permissionsFor(messageOrChannel.guild?.me!)
+        .permissionsFor(messageOrChannel.guild!.members.me!)
         .has('SEND_MESSAGES')
     ) {
       const sentMessage = messageOrChannel.send({

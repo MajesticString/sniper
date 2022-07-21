@@ -1,10 +1,13 @@
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import {
-  Constants,
+  ActionRowBuilder,
+  Colors,
+  ComponentType,
   Message,
-  MessageActionRow,
-  MessageSelectMenu,
-  MessageSelectOptionData,
+  MessageActionRowComponentBuilder,
+  MessageType,
+  SelectMenuBuilder,
+  SelectMenuComponentOptionData,
   version,
   WebhookEditMessageOptions,
 } from 'discord.js';
@@ -32,7 +35,7 @@ export default class HelpCommand extends BaseCommand {
   }
   async run(client: DiscordClient, message: Message, args: Array<string>) {
     const categories = [...helpCommandHelperCollection.keys()];
-    const menu: MessageSelectOptionData[] = [];
+    const menu: SelectMenuComponentOptionData[] = [];
 
     const updateHelpMessageExceptItReturnsTheEmbed = (
       index: number
@@ -47,7 +50,7 @@ export default class HelpCommand extends BaseCommand {
             title: categories[index],
             description:
               'Key:\n[argument]: Optional argument\n<argument>: Required argument\n[argument] <argument>: If the first argument is specified, the second argument MUST be specified.',
-            color: 'WHITE',
+            color: Colors.White,
             fields: [
               {
                 name: 'To view more info about a command, use the help command followed by the command name.',
@@ -78,7 +81,7 @@ Currency commands are also not the focus of this bot.
 If you want to use a currency bot, try the [Dank Memer](https://dankmemer.lol/) bot.`,
               },
             ],
-            color: 'WHITE',
+            color: Colors.White,
             footer: { text: 'made by ||harry potter||#0014' },
           },
         ],
@@ -139,12 +142,12 @@ If you want to use a currency bot, try the [Dank Memer](https://dankmemer.lol/) 
         else {
           reply(message, {
             title: 'Command not found',
-            color: 'RED',
+            color: Colors.Red,
           });
         }
         return;
       }
-      if (message.type === 'APPLICATION_COMMAND')
+      if (message.type === MessageType.ChatInputCommand)
         await reply(
           message,
           // eslint-disable-next-line
@@ -152,8 +155,8 @@ If you want to use a currency bot, try the [Dank Memer](https://dankmemer.lol/) 
           pages[0].embeds[0],
           {
             components: [
-              new MessageActionRow().addComponents(
-                new MessageSelectMenu()
+              new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+                new SelectMenuBuilder()
                   .setCustomId('categorySelect')
                   .setPlaceholder('Category of commands')
                   .addOptions(menu)
@@ -167,14 +170,14 @@ If you want to use a currency bot, try the [Dank Memer](https://dankmemer.lol/) 
             customId: '@sapphire/paginated-messages.firstPage',
             style: 'PRIMARY',
             emoji: '⏪',
-            type: Constants.MessageComponentTypes.BUTTON,
+            type: ComponentType.Button,
             run: ({ handler }) => (handler.index = 0),
           },
           {
             customId: '@sapphire/paginated-messages.previousPage',
             style: 'PRIMARY',
             emoji: '◀️',
-            type: Constants.MessageComponentTypes.BUTTON,
+            type: ComponentType.Button,
             run: ({ handler }) => {
               if (handler.index === 0) {
                 handler.index = handler.pages.length - 1;
@@ -187,7 +190,7 @@ If you want to use a currency bot, try the [Dank Memer](https://dankmemer.lol/) 
             customId: '@sapphire/paginated-messages.nextPage',
             style: 'PRIMARY',
             emoji: '▶️',
-            type: Constants.MessageComponentTypes.BUTTON,
+            type: ComponentType.Button,
             run: ({ handler }) => {
               if (handler.index === handler.pages.length - 1) {
                 handler.index = 0;
@@ -200,21 +203,21 @@ If you want to use a currency bot, try the [Dank Memer](https://dankmemer.lol/) 
             customId: '@sapphire/paginated-messages.goToLastPage',
             style: 'PRIMARY',
             emoji: '⏩',
-            type: Constants.MessageComponentTypes.BUTTON,
+            type: ComponentType.Button,
             run: ({ handler }) => (handler.index = handler.pages.length - 1),
           },
           {
             customId: '@sapphire/paginated-messages.stop',
             style: 'DANGER',
             emoji: '⏹️',
-            type: Constants.MessageComponentTypes.BUTTON,
+            type: ComponentType.Button,
             run: ({ collector }) => {
               collector.stop();
             },
           },
           {
             customId: '@sapphire/paginated-messages.goToPage',
-            type: Constants.MessageComponentTypes.SELECT_MENU,
+            type: ComponentType.Button,
             run: ({ handler, interaction }) =>
               interaction.isSelectMenu() &&
               (handler.index = parseInt(interaction.values[0], 10)),

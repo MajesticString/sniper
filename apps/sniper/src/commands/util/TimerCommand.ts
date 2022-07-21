@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import { Colors, Message } from 'discord.js';
 import { DateTime, Duration } from 'luxon';
 import ms from 'ms';
 import type { DiscordClient } from '../../client/client.js';
@@ -30,7 +30,7 @@ export default class TimerCommand extends BaseCommand {
 
     if (isNaN(Number(args[0]))) {
       if (msRegex.test(args[0])) time = ms(args[0]);
-      else return reply(message, { title: 'Invalid time.', color: 'RED' });
+      else return reply(message, { title: 'Invalid time.', color: Colors.Red });
     } else if (msRegex.test(args[0] + args[1])) {
       time = ms(args[0] + args[1]);
       descriptionArgStart = 2;
@@ -41,12 +41,12 @@ export default class TimerCommand extends BaseCommand {
         title: `The time must not exceed ${ms(Number.MAX_SAFE_INTEGER, {
           long: true,
         })}`,
-        color: 'RED',
+        color: Colors.Red,
       });
     if (time <= 0)
       return reply(message, {
         title: 'The time must be positive.',
-        color: 'RED',
+        color: Colors.Red,
       });
 
     const staticTime = time;
@@ -60,7 +60,7 @@ export default class TimerCommand extends BaseCommand {
         ? `(${ms(time)}) ` + args.slice(descriptionArgStart).join(' ')
         : 'Timer',
       description: `${ms(time, { long: true })}`,
-      color: 'GREEN',
+      color: Colors.Green,
       footer: {
         text: `Timer for ${ms(staticTime, {
           long: true,
@@ -78,7 +78,7 @@ export default class TimerCommand extends BaseCommand {
               ? `(${ms(time)}) ` + args.slice(descriptionArgStart).join(' ')
               : 'Timer',
             description: `${ms(time, { long: true })}`,
-            color: time > 0 ? 'GREEN' : 'RED',
+            color: time > 0 ? Colors.Green : Colors.Red,
             footer: {
               text: `Timer for ${ms(staticTime, {
                 long: true,
@@ -100,7 +100,7 @@ export default class TimerCommand extends BaseCommand {
               ? `(${ms(time)}) ` + args.slice(descriptionArgStart).join(' ')
               : 'Timer',
             description: `Timer has ended`,
-            color: 'RED',
+            color: Colors.Red,
             footer: {
               text: `Timer for ${ms(staticTime, {
                 long: true,

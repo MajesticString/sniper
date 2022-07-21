@@ -30,7 +30,7 @@ export class UserCommand extends Command {
           {
             title:
               'This snipe does not exist. This usually happens after a bot restart.',
-            color: 'RED',
+            color: Colors.Red,
           },
         ],
       });

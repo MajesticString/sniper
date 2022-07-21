@@ -1,4 +1,10 @@
-import type { GuildMember, TextChannel, VoiceChannel } from 'discord.js';
+import {
+  AuditLogEvent,
+  Colors,
+  GuildMember,
+  TextChannel,
+  VoiceChannel,
+} from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { sendMessageInBorderSecurity } from '../../utils/helpers/cambridge-server.js';
 import { BaseEvent } from '../../utils/structures/BaseEvent.js';
@@ -22,7 +28,7 @@ export default class GuildMemberRemoveEvent extends BaseEvent {
     if (member.guild.id === '882695828140073052') {
       const fetchedLogs = await member.guild.fetchAuditLogs({
         limit: 1,
-        type: 'MEMBER_KICK',
+        type: AuditLogEvent.MemberKick,
       });
       const kickLog = fetchedLogs.entries.first();
       if (!kickLog) {
@@ -30,7 +36,7 @@ export default class GuildMemberRemoveEvent extends BaseEvent {
           embeds: [
             {
               title: `${member.user.tag} has just left the server!`,
-              color: 'ORANGE',
+              color: Colors.Orange,
             },
           ],
         });
@@ -43,7 +49,7 @@ export default class GuildMemberRemoveEvent extends BaseEvent {
           embeds: [
             {
               title: `${member.user.tag} was just kicked by ${executor?.tag}!`,
-              color: 'ORANGE',
+              color: Colors.Orange,
             },
           ],
         });
@@ -52,7 +58,7 @@ export default class GuildMemberRemoveEvent extends BaseEvent {
           embeds: [
             {
               title: `${member.user.tag} has just left the server!`,
-              color: 'ORANGE',
+              color: Colors.Orange,
             },
           ],
         });
@@ -64,7 +70,7 @@ export default class GuildMemberRemoveEvent extends BaseEvent {
         embeds: [
           {
             title: `${member.user.tag} has just left the server!`,
-            color: 'ORANGE',
+            color: Colors.Orange,
           },
         ],
       });

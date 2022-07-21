@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import { Colors, Message } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { db } from '../../sniper.js';
 import { reply } from '../../utils/helpers/message.js';
@@ -24,7 +24,7 @@ export default class DeleteAllDataCommand extends BaseCommand {
       title: 'Are you sure you want to delete all of your data?',
       description:
         'This means all coins, xp and settings. This cannot be undone. Type "DELETE ALL DATA" to confirm (not case sensitive). Type literally anything else to cancel.',
-      color: 'YELLOW',
+      color: Colors.Yellow,
     });
     message.channel
       .createMessageCollector({

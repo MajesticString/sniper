@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import { Colors, Message } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import type { MWResponse, OxfordRes } from '../../typings/types.js';
 import { fetch } from '../../utils/helpers/fetch.js';
@@ -16,7 +16,10 @@ export default class DefineCommand extends BaseCommand {
   async run(client: DiscordClient, message: Message, args: Array<string>) {
     const { apiKeys } = (await import('../../sniper.js')).slappeyJSON;
     if (!args[0]) {
-      reply(message, { title: 'You must specify a search term', color: 'RED' });
+      reply(message, {
+        title: 'You must specify a search term',
+        color: Colors.Red,
+      });
       return;
     }
 
@@ -50,7 +53,7 @@ export default class DefineCommand extends BaseCommand {
         //   reply(message, {
         //     title: "That word wasn't found",
         //     description: 'Try again with a different search term.',
-        //     color: 'RED',
+        //     color: Colors.Red,
         //   });
         // }
         const data = await fetch<OxfordRes>(
@@ -153,7 +156,7 @@ export default class DefineCommand extends BaseCommand {
           reply(message, {
             title: "Couldn't find that word",
             description: 'try again with a different term',
-            color: 'RED',
+            color: Colors.Red,
           });
         } else if (typeof json[0] === 'string') {
           reply(message, {
@@ -201,7 +204,7 @@ export default class DefineCommand extends BaseCommand {
           title: 'Something went wrong.',
           description:
             'Make sure that word exists, that language code (if you are using it) exists, or maybe try an alternate spelling.',
-          color: 'RED',
+          color: Colors.Red,
         },
         {
           files: [

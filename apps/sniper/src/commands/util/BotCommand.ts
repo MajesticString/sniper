@@ -1,4 +1,4 @@
-import { Message, version } from 'discord.js';
+import { Colors, Message, version } from 'discord.js';
 import ms from 'ms';
 import type { DiscordClient } from '../../client/client.js';
 import { BaseCommand } from '../../utils/structures/BaseCommand.js';
@@ -72,11 +72,11 @@ export default class BotCommand extends BaseCommand {
               inline: true,
             },
           ],
-          color: 'WHITE',
+          color: Colors.White,
           footer: {
             text: `Made by ||harry potter||#0014\nMore info can be found using the \`ping\` command.`,
           },
-          timestamp: Date.now(),
+          timestamp: new Date().toLocaleString(),
         },
       ],
     });

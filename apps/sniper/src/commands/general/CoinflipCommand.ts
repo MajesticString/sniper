@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import { Colors, Message } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
 import { getRandomNumber } from '../../utils/helpers/randomNumber.js';
@@ -25,7 +25,7 @@ export default class CoinflipCommand extends BaseCommand {
       await reply(message, {
         title: `You ${win ? 'won' : 'lost'}!`,
         description: `You flipped a coin and got **${chosen}**!`,
-        color: win ? 'GREEN' : 'RED',
+        color: win ? Colors.Green : Colors.Red,
       });
       return;
     }

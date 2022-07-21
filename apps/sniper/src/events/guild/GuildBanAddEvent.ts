@@ -1,4 +1,4 @@
-import type { GuildBan, User } from 'discord.js';
+import { AuditLogEvent, Colors, GuildBan, User } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { sendMessageInBorderSecurity } from '../../utils/helpers/cambridge-server.js';
 import { BaseEvent } from '../../utils/structures/BaseEvent.js';
@@ -12,7 +12,7 @@ export default class GuildBanAddEvent extends BaseEvent {
     if (ban.guild.id !== '882695828140073052') return;
     const fetchedLogs = await ban.guild.fetchAuditLogs({
       limit: 1,
-      type: 'MEMBER_BAN_ADD',
+      type: AuditLogEvent.MemberBanAdd,
     });
     const banLog = fetchedLogs.entries.first();
 
@@ -24,7 +24,7 @@ export default class GuildBanAddEvent extends BaseEvent {
             description: `Reason: ${
               ban.reason ? ban.reason : 'No reason given'
             }`,
-            color: 'RED',
+            color: Colors.Red,
           },
         ],
       });
@@ -39,7 +39,7 @@ export default class GuildBanAddEvent extends BaseEvent {
             description: `Reason: ${
               ban.reason ? ban.reason : 'No reason given'
             }\nExecutor: ${executor?.tag}`,
-            color: 'RED',
+            color: Colors.Red,
           },
         ],
       });
@@ -51,7 +51,7 @@ export default class GuildBanAddEvent extends BaseEvent {
             description: `Reason: ${
               ban.reason ? ban.reason : 'No reason given'
             }`,
-            color: 'RED',
+            color: Colors.Red,
           },
         ],
       });

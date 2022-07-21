@@ -1,27 +1,34 @@
-import type { APIEmbed } from 'discord-api-types/v10';
 import {
+  ActionRowBuilder,
+  APIEmbed,
+  ButtonBuilder,
   ButtonInteraction,
+  ButtonStyle,
   CommandInteraction,
+  ComponentType,
+  Embed,
+  EmbedBuilder,
   Message,
-  MessageActionRow,
-  MessageButton,
-  MessageButtonStyleResolvable,
+  MessageActionRowComponentBuilder,
   MessageCollectorOptionsParams,
-  MessageEmbed,
 } from 'discord.js';
+import { isFunction } from 'lodash-es';
 import EventEmitter from 'node:events';
 import { reply } from './message.js';
 
 export const disableAllComponents = (message: Message) => {
   if (!message.components && !message.components[0]) return message;
 
-  message.components.forEach((component) => {
+  const componentsClone = Object.assign({}, message.components);
+
+  componentsClone.forEach((component) => {
     component.components.forEach((v) => {
+      // @ts-ignore -- whatever
       v.disabled = true;
     });
   });
   return message.edit({
-    components: message.components,
+    components: componentsClone,
   });
 };
 
@@ -39,19 +46,23 @@ export interface ConfirmationMessageOptions {
   deleteComponentsOnConfirm?: boolean;
   confirmButtonLabel?: string;
   denyButtonLabel?: string;
-  confirmButtonStyle?: MessageButtonStyleResolvable;
-  denyButtonStyle?: MessageButtonStyleResolvable;
+  confirmButtonStyle?: ButtonStyle;
+  denyButtonStyle?: ButtonStyle;
   confirmButtonCustomId?: string;
   denyButtonCustomId?: string;
   /**
    * If set, the `confirmButtonCustomId` property must be set.
    */
-  customConfirmButton?: MessageButton;
+  customConfirmButton?:
+    | ButtonBuilder
+    | ((builder: ButtonBuilder) => ButtonBuilder);
   /**
    * If set, the `denyButtonCustomId` property must be set.
    */
-  customDenyButton?: MessageButton;
-  collectorOptions?: MessageCollectorOptionsParams<'BUTTON'>;
+  customDenyButton?:
+    | ButtonBuilder
+    | ((builder: ButtonBuilder) => ButtonBuilder);
+  collectorOptions?: MessageCollectorOptionsParams<ComponentType.Button>;
 }
 
 export declare interface ConfirmationMessage {
@@ -59,34 +70,48 @@ export declare interface ConfirmationMessage {
 }
 
 export class ConfirmationMessage extends EventEmitter {
+  embed;
   constructor(
     private message: Message | CommandInteraction,
-    private embed: MessageEmbed | APIEmbed,
+    embed:
+      | Embed
+      | EmbedBuilder
+      | APIEmbed
+      | ((builder: EmbedBuilder) => EmbedBuilder),
     private options?: ConfirmationMessageOptions
   ) {
     super({ captureRejections: true });
+    this.embed = isFunction(embed)
+      ? embed(new EmbedBuilder()).toJSON()
+      : embed instanceof EmbedBuilder
+      ? embed.toJSON()
+      : embed;
     this.createCollector();
   }
 
   private async createCollector() {
     const msg = (await reply(this.message, this.embed, {
       components: [
-        new MessageActionRow().addComponents(
-          this.options?.customConfirmButton ??
-            new MessageButton()
-              .setCustomId(this.options?.confirmButtonCustomId ?? 'confirm')
-              .setLabel(this.options?.confirmButtonLabel ?? 'Yes')
-              .setStyle(this.options?.confirmButtonStyle ?? 'SUCCESS'),
-          this.options?.customDenyButton ??
-            new MessageButton()
+        new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+          (isFunction(this.options?.customDenyButton)
+            ? this.options?.customDenyButton(new ButtonBuilder())
+            : this.options?.customDenyButton) ??
+            new ButtonBuilder()
+              .setCustomId(this.options?.denyButtonCustomId ?? 'confirm')
+              .setLabel(this.options?.denyButtonLabel ?? 'Yes')
+              .setStyle(this.options?.denyButtonStyle ?? ButtonStyle.Success),
+          (isFunction(this.options?.customDenyButton)
+            ? this.options?.customDenyButton(new ButtonBuilder())
+            : this.options?.customDenyButton) ??
+            new ButtonBuilder()
               .setCustomId(this.options?.denyButtonCustomId ?? 'deny')
               .setLabel(this.options?.denyButtonLabel ?? 'No')
-              .setStyle(this.options?.denyButtonStyle ?? 'DANGER')
+              .setStyle(this.options?.denyButtonStyle ?? ButtonStyle.Danger)
         ),
       ],
     })) as Message;
     const collector = msg.createMessageComponentCollector({
-      componentType: 'BUTTON',
+      componentType: ComponentType.Button,
       dispose: this.options?.collectorOptions?.dispose,
       time: this.options?.collectorOptions?.time,
       idle: this.options?.collectorOptions?.idle ?? 15 * 1000,

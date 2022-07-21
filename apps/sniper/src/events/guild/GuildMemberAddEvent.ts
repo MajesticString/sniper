@@ -1,4 +1,4 @@
-import type { GuildMember, VoiceChannel } from 'discord.js';
+import { Colors, GuildMember, VoiceChannel } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { sendMessageInBorderSecurity } from '../../utils/helpers/cambridge-server.js';
 import { sleep } from '../../utils/helpers/misc.js';
@@ -23,7 +23,7 @@ export default class GuildMemberAddEvent extends BaseEvent {
             title:
               "This server is for people in the Cambridge Program only. If you don't know what that is, you probably aren't in it.\n\nAlso, please state your preferred name in this channel.",
             description: `[More info on the cambridge program](https://jhs.lwsd.org/academics/cambridge-program)`,
-            color: 'RED',
+            color: Colors.Red,
           },
         ],
       });

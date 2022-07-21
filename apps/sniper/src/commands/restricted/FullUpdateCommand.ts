@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { CommandInteraction, Message, MessageEmbed } from 'discord.js';
+import { Colors, CommandInteraction, EmbedBuilder, Message } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { goodServers } from '../../sniper.js';
 import { ConfirmationMessage } from '../../utils/helpers/interactions.js';
@@ -26,10 +26,10 @@ export default class RestartCommand extends BaseCommand {
   async run(client: DiscordClient, message: Message | CommandInteraction) {
     new ConfirmationMessage(
       message,
-      new MessageEmbed()
+      new EmbedBuilder()
         .setTitle('Are you sure you want to update Sniper?')
         .setDescription('This will also restart the VM')
-        .setColor('GREEN')
+        .setColor(Colors.Green)
     ).on('confirm', (i) => {
       i.reply('updating sniper....');
       exec(

@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import { Colors, Message } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import type { GithubCommits } from '../../typings/types.js';
 import { fetch } from '../../utils/helpers/fetch.js';
@@ -41,17 +41,8 @@ export default class ChangelogCommand extends BaseCommand {
       reply(message, {
         title: 'Changelog',
         fields: githubCommitMessages,
-        color: 'WHITE',
+        color: Colors.White,
       });
     });
-    // axios
-    //   .get<GithubCommits>(
-    //     `https://api.github.com/repos/MajesticString/sniper/commits?per_page=${
-    //       args[0] ? (parseInt(args[0]) > 10 ? '10' : args[0]) : '5'
-    //     }`
-    //   )
-    //   .then((res) => {
-
-    //   });
   }
 }

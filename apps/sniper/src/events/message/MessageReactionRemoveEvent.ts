@@ -1,7 +1,8 @@
 // https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-messageReactionRemove
-import type {
+import {
   GuildMember,
   MessageReaction,
+  PermissionFlagsBits,
   TextChannel,
   User,
 } from 'discord.js';
@@ -24,8 +25,8 @@ export default class MessageReactionRemoveEvent extends BaseEvent {
     idk.catch(() => null);
     if (
       (reaction.message.channel as TextChannel)
-        .permissionsFor(reaction.message.guild?.me as GuildMember)
-        .has('READ_MESSAGE_HISTORY')
+        .permissionsFor(reaction.message.guild?.members.me as GuildMember)
+        .has(PermissionFlagsBits.ReadMessageHistory)
     )
       reaction = await idk;
 

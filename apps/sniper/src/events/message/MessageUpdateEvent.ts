@@ -1,5 +1,5 @@
 // https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-messageUpdate
-import { Message, Util } from 'discord.js';
+import { cleanContent, Message } from 'discord.js';
 import ms from 'ms';
 import type { DiscordClient } from '../../client/client.js';
 import { editSnipes } from '../../commands/util/snipes.js';
@@ -17,10 +17,10 @@ export default class MessageUpdateEvent extends BaseEvent {
     if (oldMessage.content !== newMessage.content) {
       if (oldMessage.guildId === '882695828140073052')
         log(
-          `old message (${oldMessage.guild?.name}):\n${Util.cleanContent(
+          `old message (${oldMessage.guild?.name}):\n${cleanContent(
             oldMessage.content,
             oldMessage.channel
-          )}\nnew message:\n${Util.cleanContent(
+          )}\nnew message:\n${cleanContent(
             newMessage.content,
             newMessage.channel
           )}`

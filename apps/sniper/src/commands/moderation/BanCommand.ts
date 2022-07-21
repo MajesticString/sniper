@@ -1,4 +1,10 @@
-import type { GuildMember, Message, TextChannel } from 'discord.js';
+import {
+  Colors,
+  GuildMember,
+  Message,
+  PermissionFlagsBits,
+  TextChannel,
+} from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
 import { BaseCommand } from '../../utils/structures/BaseCommand.js';
@@ -7,29 +13,31 @@ export default class BanCommand extends BaseCommand {
   constructor() {
     super('ban', 'moderation', [], 100, 'Bans any amount of members.', {
       argsDescription: '<@user or userID> <user> <user> ...',
-      permissions: ['BAN_MEMBERS'],
+      permissions: ['BanMembers'],
     });
   }
 
   async run(client: DiscordClient, message: Message, args: Array<string>) {
     const users: GuildMember[] = [];
-    if (!message.member?.permissions.has('BAN_MEMBERS')) {
+    if (!message.member?.permissions.has(PermissionFlagsBits.BanMembers)) {
       reply(message, {
         title: 'really?',
         description: 'You do not have the `BAN_MEMBERS` permission.',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
     if (
-      !message.guild?.me?.permissions.has('BAN_MEMBERS') ||
+      !message.guild?.members.me?.permissions.has(
+        PermissionFlagsBits.BanMembers
+      ) ||
       !(message.channel as TextChannel)
-        .permissionsFor(message.guild.me)
-        .has('BAN_MEMBERS')
+        .permissionsFor(message.guild.members.me)
+        .has(PermissionFlagsBits.BanMembers)
     ) {
       reply(message, {
         title: 'I do not have the `BAN_MEMBERS` permission.',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }

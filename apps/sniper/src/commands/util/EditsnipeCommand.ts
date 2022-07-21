@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { Colors, EmbedBuilder, Message, TextChannel } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
 import { BaseCommand } from '../../utils/structures/BaseCommand.js';
@@ -28,7 +28,7 @@ export default class EditsnipeCommand extends BaseCommand {
 
   async run(
     client: DiscordClient,
-    message: Message | BaseCommand.CommandInteraction
+    message: Message | BaseCommand.ChatInputCommandInteraction
   ): Promise<any> {
     const snipe = editSnipes[message.channelId];
     if (!snipe)
@@ -36,25 +36,27 @@ export default class EditsnipeCommand extends BaseCommand {
         title: "There's nothing to snipe!",
         description:
           'Deleted messages can only be sniped within 1 hour of deletion.',
-        color: 'RED',
+        color: Colors.Red,
       });
 
     await reply(
       message,
       snipe
-        ? new MessageEmbed()
-            .addField('Old message:', snipe.content ?? '')
-            .addField(
-              'New message:',
-              `[Jump!](https://discord.com/channels/${message.guild?.id}/${message.channelId}/${snipe.id})`
+        ? new EmbedBuilder()
+            .addFields(
+              { name: 'Old message:', value: snipe.content ?? '' },
+              {
+                name: 'New message:',
+                value: `[Jump!](https://discord.com/channels/${message.guild?.id}/${message.channelId}/${snipe.id})`,
+              }
             )
             .setAuthor({ name: snipe.author?.tag ?? '' })
-            .setColor('GREEN')
+            .setColor(Colors.Green)
             .setFooter({ text: `#${(message.channel as TextChannel).name}` })
             .setTimestamp(snipe.createdAt ? snipe.createdAt : 0)
-        : new MessageEmbed()
+        : new EmbedBuilder()
             .setTitle("There's nothing to snipe!")
-            .setColor('RED')
+            .setColor(Colors.Red)
     );
   }
 }

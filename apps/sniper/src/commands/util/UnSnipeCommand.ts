@@ -1,8 +1,12 @@
-import { PermissionFlagsBits } from 'discord-api-types/v10';
 import {
-  MessageActionRow,
-  MessageButton,
-  type ContextMenuInteraction,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  Colors,
+  ComponentType,
+  ContextMenuCommandInteraction,
+  MessageActionRowComponentBuilder,
+  PermissionFlagsBits,
   type Message,
   type TextChannel,
 } from 'discord.js';
@@ -33,7 +37,7 @@ This has the added effect of allowing the original \`snipe\` command to be delet
       reply(message, {
         title:
           'This snipe does not exist. This usually happens after a bot restart.',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
@@ -51,15 +55,15 @@ This has the added effect of allowing the original \`snipe\` command to be delet
 
   override async contextMenuRun(
     client: DiscordClient,
-    interaction: ContextMenuInteraction
+    interaction: ContextMenuCommandInteraction
   ) {
-    if (interaction.isMessageContextMenu()) {
+    if (interaction.isMessageContextMenuCommand()) {
       if (interaction.targetMessage.author.id !== client.user?.id)
         return interaction.reply({
           embeds: [
             {
               title: "This command must be used on one of Sniper's messages.",
-              color: 'RED',
+              color: Colors.Red,
             },
           ],
           ephemeral: true,
@@ -71,7 +75,7 @@ This has the added effect of allowing the original \`snipe\` command to be delet
             {
               title:
                 'This snipe does not exist. This usually happens after a bot restart.',
-              color: 'RED',
+              color: Colors.Red,
             },
           ],
           ephemeral: true,
@@ -94,7 +98,7 @@ This has the added effect of allowing the original \`snipe\` command to be delet
         if (
           (<TextChannel>interaction.channel)
             // eslint-disable-next-line -- it exists
-            .permissionsFor(interaction.guild!.me!)
+            .permissionsFor(interaction.guild!.members.me!)
             .has(PermissionFlagsBits.ManageMessages)
         ) {
           const msg = <Message>await interaction.reply({
@@ -108,16 +112,16 @@ This has the added effect of allowing the original \`snipe\` command to be delet
             ephemeral: true,
             fetchReply: true,
             components: [
-              new MessageActionRow().addComponents(
-                new MessageButton()
-                  .setStyle('PRIMARY')
+              new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setStyle(ButtonStyle.Primary)
                   .setLabel('Yes')
                   .setCustomId('yes')
               ),
             ],
           });
           const collector = msg.createMessageComponentCollector({
-            componentType: 'BUTTON',
+            componentType: ComponentType.Button,
           });
           collector.on('collect', (c) => {
             if (c.customId === 'yes') {

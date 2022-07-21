@@ -1,4 +1,9 @@
-import type { EmbedField, Message, TextChannel } from 'discord.js';
+import {
+  EmbedField,
+  Message,
+  PermissionFlagsBits,
+  TextChannel,
+} from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
 import { BaseCommand } from '../../utils/structures/BaseCommand.js';
@@ -45,8 +50,8 @@ export default class VoteCommand extends BaseCommand {
       if (
         (msg.channel as TextChannel)
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          .permissionsFor(message.guild!.me!)
-          .has('ADD_REACTIONS')
+          .permissionsFor(message.guild!.members.me!)
+          .has(PermissionFlagsBits.AddReactions)
       ) {
         await msg.react('1️⃣');
         await msg.react('2️⃣');

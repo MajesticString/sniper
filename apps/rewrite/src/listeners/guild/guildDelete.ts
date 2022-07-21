@@ -29,7 +29,7 @@ export class GuildDelete extends Listener<typeof Events.GuildDelete> {
             `**Guild Name:** ${guild.name}`,
             `**Guild ID:** ${guild.id}`,
             `**Guild Owner:** ${owner?.user.tag}`,
-            `**Guild Member Count:** ${guild.memberCount?.toLocaleString()}`,
+            `**Guild Member Count:** ${guild.members.memberCount?.toLocaleString()}`,
           ].join('\n'),
           image: {
             url:

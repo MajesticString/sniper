@@ -1,4 +1,4 @@
-import type { GuildMember, Message, User } from 'discord.js';
+import { Colors, GuildMember, Message, User } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import {
   getMentionedMember,
@@ -20,7 +20,7 @@ export default class WhoisCommand extends BaseCommand {
       reply(message, {
         title: "That user doesn't exist",
         description: 'Try mentioning the user',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
@@ -30,7 +30,7 @@ export default class WhoisCommand extends BaseCommand {
         title: 'That user is not in this server',
         description:
           'Make sure that user is in that server before using this command.',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
@@ -38,9 +38,7 @@ export default class WhoisCommand extends BaseCommand {
     reply(message, {
       title: `${user.tag}${member.nickname ? `(${member.nickname})` : ''}`,
       thumbnail: {
-        url:
-          user.avatarURL({ dynamic: true, format: 'webp' }) ||
-          user.defaultAvatarURL,
+        url: user.avatarURL({ extension: 'webp' }) || user.defaultAvatarURL,
       },
       fields: [
         {
@@ -51,8 +49,7 @@ export default class WhoisCommand extends BaseCommand {
         {
           name: 'Avatar',
           value: `[Link](${
-            user.avatarURL({ dynamic: true, format: 'webp' }) ||
-            user.defaultAvatarURL
+            user.avatarURL({ extension: 'webp' }) || user.defaultAvatarURL
           })`,
           inline: true,
         },

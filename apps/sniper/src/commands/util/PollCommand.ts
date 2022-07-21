@@ -1,4 +1,4 @@
-import type { Message, TextChannel } from 'discord.js';
+import { Colors, Message, PermissionsBitField, TextChannel } from 'discord.js';
 import type { DiscordClient } from '../../client/client.js';
 import { reply } from '../../utils/helpers/message.js';
 import { BaseCommand } from '../../utils/structures/BaseCommand.js';
@@ -14,7 +14,7 @@ export default class PollCommand extends BaseCommand {
     if (!args[0]) {
       reply(message, {
         title: 'you must actually provide a poll lol',
-        color: 'RED',
+        color: Colors.Red,
       });
       return;
     }
@@ -24,8 +24,8 @@ export default class PollCommand extends BaseCommand {
       if (
         (msg.channel as TextChannel)
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          .permissionsFor(message.guild!.me!)
-          .has('ADD_REACTIONS')
+          .permissionsFor(message.guild!.members.me!)
+          .has(PermissionsBitField.Flags.AddReactions)
       ) {
         await msg.react('👍');
         await msg.react('👎');
