@@ -48,7 +48,7 @@
     "@firebase/app-types": "0.7.0",
     "@types/body-parser": "1.19.2",
     "@types/lodash-es": "4.17.6",
-    "@types/luxon": "^2.3.2",
+    "@types/luxon": "3.0.0",
     "@types/ms": "0.7.31",
     "@types/node": "18.0.5",
     "@typescript-eslint/eslint-plugin": "5.30.6",
